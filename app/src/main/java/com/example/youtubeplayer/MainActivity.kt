@@ -27,31 +27,34 @@ class MainActivity : YouTubeBaseActivity() {
         setContentView(R.layout.activity_main)
         //setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
-          fun initUI() {
-            youtubePlayerInitializer = object : YouTubePlayer.OnInitializedListener {
-                override fun onInitializationSuccess(
-                    p0: YouTubePlayer.Provider?,
-                    player: YouTubePlayer?,
-                    p2: Boolean
-                ) {
-                   player?.loadVideo(VIDEO_ID)
-                }
+//        fab.setOnClickListener { view ->
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
+//        }
+        initUI()
+    }
 
-                override fun onInitializationFailure(
-                    p0: YouTubePlayer.Provider?,
-                    p1: YouTubeInitializationResult?
-                ) {
-                    Toast.makeText(applicationContext, "This video could not play", Toast.LENGTH_SHORT).show()
-                }
-
+    private fun initUI() {
+        youtubePlayerInitializer = object : YouTubePlayer.OnInitializedListener {
+            override fun onInitializationSuccess(
+                p0: YouTubePlayer.Provider?,
+                player: YouTubePlayer?,
+                p2: Boolean
+            ) {
+                player?.loadVideo(videoID)
             }
-            playButton.setOnClickListener(View.OnClickListener { view -> youtubePlayer.initialize(
-                youtubeApiKey, youtubePlayerInitializer) })
+
+            override fun onInitializationFailure(
+                p0: YouTubePlayer.Provider?,
+                p1: YouTubeInitializationResult?
+            ) {
+                Toast.makeText(applicationContext, "This video could not play", Toast.LENGTH_SHORT).show()
+            }
+
         }
+        playButton.setOnClickListener(View.OnClickListener {
+            youtubePlayer.initialize(
+            youtubeApiKey, youtubePlayerInitializer) })
     }
 
 }
