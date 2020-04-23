@@ -20,7 +20,7 @@ class MainActivity : YouTubeBaseActivity() {
         val youtubeApiKey = "AIzaSyDfvoPGw2v2AWnBf6ezDKdos5kxdpTLgn4"
     }
 
-    lateinit var youtubePlayerInitializer : YouTubePlayer.OnInitializedListener
+    private lateinit var youtubePlayerInitializer : YouTubePlayer.OnInitializedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,6 @@ class MainActivity : YouTubeBaseActivity() {
             ) {
                 player?.loadVideo(videoID)
             }
-
             override fun onInitializationFailure(
                 p0: YouTubePlayer.Provider?,
                 p1: YouTubeInitializationResult?
@@ -53,8 +52,7 @@ class MainActivity : YouTubeBaseActivity() {
 
         }
         playButton.setOnClickListener(View.OnClickListener {
-            youtubePlayer.initialize(
-            youtubeApiKey, youtubePlayerInitializer) })
+            youtubePlayer.initialize(youtubeApiKey, youtubePlayerInitializer) })
     }
 
 }
