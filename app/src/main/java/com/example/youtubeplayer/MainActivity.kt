@@ -1,15 +1,11 @@
 package com.example.youtubeplayer
 
 import android.os.Bundle
-import android.provider.MediaStore.Video.Thumbnails.VIDEO_ID
 import android.view.View
 import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
-
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : YouTubeBaseActivity() {
