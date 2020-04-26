@@ -3,52 +3,41 @@ package com.example.youtubeplayer
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
+import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : YouTubeBaseActivity() {
+class YouTubePlayerAPIActivity : AppCompatActivity(), YouTubePlayer.OnInitializedListener {
 
-//trying to push to new branch agaian
-    companion object {
-        val videoID = "xWCHng2sqZE"
-        val youtubeApiKey = "AIzaSyDfvoPGw2v2AWnBf6ezDKdos5kxdpTLgn4"
-    }
 
-    private lateinit var youtubePlayerInitializer : YouTubePlayer.OnInitializedListener
+    private val RECOVERY_DIALOG_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        //setSupportActionBar(toolbar)
+        setContentView(R.layout.activity_youtube_player_api)
 
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-//        }
-        initUI()
+        val youTubePlayerFragment = supportFragmentManager.findFragmentById(R.id.official_player_view) as YouTubePlayerSupportFragment?
+        youTubePlayerFragment?.initialize("AIzaSyDfvoPGw2v2AWnBf6ezDKdos5kxdpTLgn4", this)
     }
 
-    private fun initUI() {
-        youtubePlayerInitializer = object : YouTubePlayer.OnInitializedListener {
-            override fun onInitializationSuccess(
-                p0: YouTubePlayer.Provider?,
-                player: YouTubePlayer?,
-                p2: Boolean
-            ) {
-                player?.loadVideo(videoID)
-            }
-            override fun onInitializationFailure(
-                p0: YouTubePlayer.Provider?,
-                p1: YouTubeInitializationResult?
-            ) {
-                Toast.makeText(applicationContext, "This video could not play", Toast.LENGTH_SHORT).show()
-            }
-
+    override fun onInitializationSuccess(provider: YouTubePlayer.Provider,youTubePlayer: YouTubePlayer,wasRestored: Boolean) {
+        if (!wasRestored) {
+            youTubePlayer.cueVideo("xWCHng2sqZE")
         }
-        playButton.setOnClickListener(View.OnClickListener {
-            youtubePlayer.initialize(youtubeApiKey, youtubePlayerInitializer) })
     }
 
+    override fun onInitializationFailure(provider: YouTubePlayer.Provider,youTubeInitializationResult: YouTubeInitializationResult) {
+        if (youTubeInitializationResult.isUserRecoverableError) {
+            youTubeInitializationResult.getErrorDialog(this, RECOVERY_DIALOG_REQUEST).show()
+        } else {
+            val errorMessage = String.format(
+                "There was an error initializing the YouTubePlayer (%1\$s)",
+                youTubeInitializationResult.toString()
+            )
+            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        }
+    }
 }
