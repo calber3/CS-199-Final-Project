@@ -1,16 +1,13 @@
 package com.example.youtubeplayer
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
-class YouTubePlayerAPIActivity : AppCompatActivity(), YouTubePlayer.OnInitializedListener {
+class MainActivity : AppCompatActivity(), YouTubePlayer.OnInitializedListener {
 
 
     private val RECOVERY_DIALOG_REQUEST = 1
