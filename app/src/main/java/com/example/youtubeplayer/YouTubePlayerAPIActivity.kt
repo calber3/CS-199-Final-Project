@@ -1,44 +1,40 @@
 package com.example.youtubeplayer
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
-//import com.google.android.YouTube.player.YouTubePlayer
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_youtube_player_api.*
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
+import com.google.android.youtube.player.YouTubePlayerSupportFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), YouTubePlayer.OnInitializedListener {
+
+
+    private val RECOVERY_DIALOG_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_youtube_player_api)
 
-        third_party_player_view.getPlayerUiController().showFullscreenButton(true)
-        third_party_player_view.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-            override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
-                val videoId = "YE7VzlLtp-4"
-                youTubePlayer.cueVideo(videoId, 0f)
-            }
-        })
+        val youTubePlayerFragment = supportFragmentManager.findFragmentById(R.id.official_player_view) as YouTubePlayerSupportFragment?
+        youTubePlayerFragment?.initialize("AIzaSyDfvoPGw2v2AWnBf6ezDKdos5kxdpTLgn4", this)
+    }
 
-        third_party_player_view.getPlayerUiController().setFullScreenButtonClickListener(View.OnClickListener {
-            if (third_party_player_view.isFullScreen()) {
-                third_party_player_view.exitFullScreen()
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-                // Show ActionBar
-                if (supportActionBar != null) {
-                    supportActionBar!!.show()
-                }
-            } else {
-                third_party_player_view.enterFullScreen()
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-                // Hide ActionBar
-                if (supportActionBar != null) {
-                    supportActionBar!!.hide()
-                }
-            }
-        })
+    override fun onInitializationSuccess(provider: YouTubePlayer.Provider,youTubePlayer: YouTubePlayer,wasRestored: Boolean) {
+        if (!wasRestored) {
+            youTubePlayer.cueVideo("xWCHng2sqZE")
+        }
+    }
+
+    override fun onInitializationFailure(provider: YouTubePlayer.Provider,youTubeInitializationResult: YouTubeInitializationResult) {
+        if (youTubeInitializationResult.isUserRecoverableError) {
+            youTubeInitializationResult.getErrorDialog(this, RECOVERY_DIALOG_REQUEST).show()
+        } else {
+            val errorMessage = String.format(
+                "There was an error initializing the YouTubePlayer (%1\$s)",
+                youTubeInitializationResult.toString()
+            )
+            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        }
     }
 }
